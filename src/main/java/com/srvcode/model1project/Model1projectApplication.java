@@ -3,6 +3,7 @@ package com.srvcode.model1project;
 import com.srvcode.model1project.impl.EmailNotificationService;
 import com.srvcode.model1project.impl.SmsNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ public class Model1projectApplication implements CommandLineRunner {
 	//@Autowired
 	final private NotificationService notificationServiceobj;
 
-	public Model1projectApplication(NotificationService notificationServiceobj) {
+	public Model1projectApplication(@Qualifier("smsNotif") NotificationService notificationServiceobj) {
 		this.notificationServiceobj = notificationServiceobj;
 	}
 
