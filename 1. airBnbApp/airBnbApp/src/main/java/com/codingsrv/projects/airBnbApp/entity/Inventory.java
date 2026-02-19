@@ -40,6 +40,9 @@ public class Inventory {
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")  // defining default value 0 at beginning.
     private Integer bookCount;
 
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")  // defining default value 0 at beginning.
+    private int reservedCount;
+
     @Column(nullable = false)
     private Integer totalCount;
 
@@ -54,7 +57,7 @@ public class Inventory {
     private String city;
 
     @Column(nullable = false)
-    private Boolean closed;
+    private Boolean closed;    // we want the inventory that is not closed
 
 
     @UpdateTimestamp

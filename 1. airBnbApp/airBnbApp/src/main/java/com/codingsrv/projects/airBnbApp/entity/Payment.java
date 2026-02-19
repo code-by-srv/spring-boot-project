@@ -39,6 +39,10 @@ public class Payment {
     private String updatedAt;
 
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private Booking booking;   // unidirectional mapping
+
+
 
 
 

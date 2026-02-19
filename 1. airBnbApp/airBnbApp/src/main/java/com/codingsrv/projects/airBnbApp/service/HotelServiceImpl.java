@@ -1,20 +1,26 @@
 package com.codingsrv.projects.airBnbApp.service;
 
 import com.codingsrv.projects.airBnbApp.dto.HotelDto;
+import com.codingsrv.projects.airBnbApp.dto.HotelInfoDto;
+import com.codingsrv.projects.airBnbApp.dto.RoomDto;
 import com.codingsrv.projects.airBnbApp.entity.Hotel;
 import com.codingsrv.projects.airBnbApp.entity.Room;
 import com.codingsrv.projects.airBnbApp.exception.ResourceNotFoundException;
 import com.codingsrv.projects.airBnbApp.repository.HotelRepository;
+import com.codingsrv.projects.airBnbApp.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class HotelServiceImpl implements HotelService{
+    private final RoomRepository roomRepository;
 
     private final HotelRepository hotelRepository;
     private final InventoryService inventoryService;
@@ -51,18 +57,21 @@ public class HotelServiceImpl implements HotelService{
     }
 
     @Override
-    @Transactional // as two different database call happening inside one method.
+    @Transactional
     public void deleteHotelById(Long hotelId) {
+
         Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(()-> new ResourceNotFoundException("hotel not found with ID: "+hotelId));
-        hotelRepository.deleteById(hotelId);
-
-        // deleting the future inventory for this hotel by id
-        for (Room room : hotel.getRooms()){
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("hotel not found with ID: " + hotelId));
+        // Delete inventory and rooms first
+        for (Room room : hotel.getRooms()) {
             inventoryService.deleteFutureInventory(room);
+            roomRepository.delete(room);
         }
-
+        //  Delete hotel last
+        hotelRepository.delete(hotel);
     }
+
 
     @Override
     @Transactional  // as two different database call happening inside one method.
@@ -77,6 +86,18 @@ public class HotelServiceImpl implements HotelService{
             inventoryService.initializeRoomForAYear(room);
         }
 
+    }
+
+    @Override
+    public HotelInfoDto findHotelInfoById(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel not found with ID: "+hotelId));
+
+        List<RoomDto> rooms = hotel.getRooms()
+                .stream()
+                .map(element->modelMapper.map(element, RoomDto.class))
+                .toList();
+        return new HotelInfoDto(modelMapper.map(hotel, HotelDto.class),rooms);
     }
 
 }
