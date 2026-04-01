@@ -6,6 +6,7 @@ import com.codingsrv.projects.airBnbApp.entity.Room;
 import com.codingsrv.projects.airBnbApp.exception.ResourceNotFoundException;
 import com.codingsrv.projects.airBnbApp.repository.HotelRepository;
 import com.codingsrv.projects.airBnbApp.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -65,6 +66,7 @@ public class RoomServiceImpl implements RoomService{
 
     }
 
+    @Transactional
     @Override
     public void deleteRoomById(Long roomId) {
         log.info("Deleting room with id: {}", roomId);

@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +28,10 @@ public class Room {
     @JoinColumn(name = "hotel_id", nullable = false)
     @JsonIgnore
     private Hotel hotel;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Inventory> inventories;
 
     @Column(nullable = false)
     private String type;
