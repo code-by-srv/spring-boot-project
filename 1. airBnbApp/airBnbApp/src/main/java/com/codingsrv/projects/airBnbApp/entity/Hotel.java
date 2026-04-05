@@ -50,7 +50,7 @@ public class Hotel {
     @JsonIgnore
     private List<Room> rooms;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User owner;  // As one owner can have multiple hotel
 
 
