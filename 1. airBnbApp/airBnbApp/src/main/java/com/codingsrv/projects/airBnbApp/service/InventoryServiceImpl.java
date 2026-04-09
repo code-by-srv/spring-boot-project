@@ -1,9 +1,7 @@
 package com.codingsrv.projects.airBnbApp.service;
 
 import com.codingsrv.projects.airBnbApp.dto.HotelBrowseDto;
-import com.codingsrv.projects.airBnbApp.dto.HotelDto;
 import com.codingsrv.projects.airBnbApp.dto.HotelPriceDto;
-import com.codingsrv.projects.airBnbApp.entity.Hotel;
 import com.codingsrv.projects.airBnbApp.entity.Inventory;
 import com.codingsrv.projects.airBnbApp.entity.Room;
 import com.codingsrv.projects.airBnbApp.repository.HotelMinPriceRepository;
@@ -39,7 +37,7 @@ public class InventoryServiceImpl implements InventoryService{
             Inventory inventory = Inventory.builder()  // building instance of Inventory using all its fields
                     .hotel(room.getHotel())
                     .room(room)
-                    .bookCount(0)
+                    .bookedCount(0)
                     .city(room.getHotel().getCity())
                     .date(today)
                     .price(room.getBasePrice())
@@ -51,12 +49,12 @@ public class InventoryServiceImpl implements InventoryService{
         }
     }
 
+
+
     @Override
     public void deleteFutureInventory(Room room) {
-        log.info("Deleting Inventory of room with id: {}",room.getId());
-        LocalDate today = LocalDate.now();
-        inventoryRepository.deleteByDateAfterAndRoom(today,room);
-
+        log.info("Deleting the inventories of room with id: {}", room.getId());
+        inventoryRepository.deleteByRoom(room);
     }
 
     @Override

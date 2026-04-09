@@ -4,8 +4,9 @@ import com.codingsrv.projects.airBnbApp.dto.HotelDto;
 import com.codingsrv.projects.airBnbApp.dto.HotelInfoDto;
 import org.jspecify.annotations.Nullable;
 
-public interface HotelService {
+import java.util.List;
 
+public interface HotelService {
     HotelDto createNewHotel(HotelDto hotelDto);
 
     HotelDto getHotelById(Long id);
@@ -17,5 +18,5 @@ public interface HotelService {
     void activateHotel(Long hotelId);
 
 
-     HotelInfoDto findHotelInfoById(Long hotelId);
+    HotelInfoDto findHotelInfoById(Long hotelId);
 }

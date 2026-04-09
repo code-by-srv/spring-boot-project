@@ -38,7 +38,7 @@ public class Inventory {
     private LocalDate date;
 
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")  // defining default value 0 at beginning.
-    private Integer bookCount;
+    private Integer bookedCount;
 
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")  // defining default value 0 at beginning.
     private int reservedCount;

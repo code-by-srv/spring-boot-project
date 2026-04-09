@@ -3,12 +3,14 @@ package com.codingsrv.projects.airBnbApp.service;
 import com.codingsrv.projects.airBnbApp.dto.HotelDto;
 import com.codingsrv.projects.airBnbApp.dto.HotelInfoDto;
 import com.codingsrv.projects.airBnbApp.dto.RoomDto;
+import com.codingsrv.projects.airBnbApp.dto.RoomPriceDto;
 import com.codingsrv.projects.airBnbApp.entity.Hotel;
 import com.codingsrv.projects.airBnbApp.entity.Room;
 import com.codingsrv.projects.airBnbApp.entity.User;
 import com.codingsrv.projects.airBnbApp.exception.ResourceNotFoundException;
 import com.codingsrv.projects.airBnbApp.exception.UnAuthorisedException;
 import com.codingsrv.projects.airBnbApp.repository.HotelRepository;
+import com.codingsrv.projects.airBnbApp.repository.InventoryRepository;
 import com.codingsrv.projects.airBnbApp.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -78,7 +82,7 @@ public class HotelServiceImpl implements HotelService{
     }
 
     @Override
-    @Transactional
+    @jakarta.transaction.Transactional
     public void deleteHotelById(Long hotelId) {
 
         Hotel hotel = hotelRepository.findById(hotelId)
@@ -118,13 +122,13 @@ public class HotelServiceImpl implements HotelService{
 
         hotel.setActive(true);
 
-       //creating inventory (only one time) for all the rooms for this hotel
+        //creating inventory (only one time) for all the rooms for this hotel
         for (Room room : hotel.getRooms()){
             inventoryService.initializeRoomForAYear(room);
         }
 
     }
-// public method
+    // public method
     @Override
     public HotelInfoDto findHotelInfoById(Long hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
