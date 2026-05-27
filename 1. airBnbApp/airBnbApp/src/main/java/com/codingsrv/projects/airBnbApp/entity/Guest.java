@@ -1,6 +1,7 @@
 package com.codingsrv.projects.airBnbApp.entity;
 
 import com.codingsrv.projects.airBnbApp.entity.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,9 +34,10 @@ public class Guest {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToMany(mappedBy = "guests")
-    private Set<Booking> bookings;
+//
+//    @ManyToMany(mappedBy = "guests")
+//    @JsonIgnore
+//    private Set<Booking> bookings;
 
 
 

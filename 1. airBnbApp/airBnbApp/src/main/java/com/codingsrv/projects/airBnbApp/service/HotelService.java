@@ -19,4 +19,6 @@ public interface HotelService {
 
 
     HotelInfoDto findHotelInfoById(Long hotelId);
+
+     List<HotelDto> getAllHotels();
 }

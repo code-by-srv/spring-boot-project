@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,50 +24,26 @@ public class JwtService {
     }
 
     public String generateAccessToken(User user) {
-
-        if (user.getId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null while generating JWT");
-        }
-
-        return Jwts.builder()
-                    .subject(user.getId().toString())
-                    .claim("email", user.getEmail())
-                    .claim("roles", Set.of("ADMIN", "USER"))
-                    .issuedAt(new Date())
-                    .expiration(new Date(System.currentTimeMillis() + 60 * 1000*100))  // 100 minutes
-                    .signWith(getSecretKey())
-                    .compact();
-    }
-
-    public String generateRefreshToken(User user) {
-
-        if (user.getId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null while generating JWT");
-        }
-
         return Jwts.builder()
                 .subject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("roles", user.getRoles().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 60L*1000*60*24*30*6))  // 6 months
+                .expiration(new Date(System.currentTimeMillis() + 1000*60*100))
                 .signWith(getSecretKey())
                 .compact();
     }
 
-
-    public boolean validateToken(String token, User user) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        Long userId = Long.valueOf(claims.getSubject());
-        Date expiration = claims.getExpiration();
-
-        return userId.equals(user.getId()) && expiration.after(new Date());
+    public String generateRefreshToken(User user) {
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L *60*60*24*30*6))
+                .signWith(getSecretKey())
+                .compact();
     }
 
-
-    public Long getUserIdFromToken(String token){
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
